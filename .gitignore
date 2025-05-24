@@ -1,0 +1,6 @@
+flower_env
+__pycache__
+flowers
+mlruns
+k8s
+models
