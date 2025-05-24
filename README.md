@@ -43,7 +43,7 @@ graph TD
     I --> J[Monitoring]
     J -->|Drift Detected| B
     
-    subgraph "Development Environment"
+    subgraph DevEnv[Development Environment]
     B
     C
     D
@@ -52,14 +52,14 @@ graph TD
     G
     end
     
-    subgraph "Production Environment"
+    subgraph ProdEnv[Production Environment]
     H
     I
     J
     end
     
-    K[CI/CD Pipeline] --> Development Environment
-    K --> Production Environment
+    K[CI/CD Pipeline] --> B
+    K[CI/CD Pipeline] --> H
 ```
 
 ## 🔧 Installation
