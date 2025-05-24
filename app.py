@@ -58,15 +58,16 @@ def preprocess_image(image):
     image = transform(image).unsqueeze(0)  # Add batch dimension
     return image
 
-# Predict class
+# Predict class with confidence
 
 
 def predict(model, image, device):
     image = preprocess_image(image).to(device)
     with torch.no_grad():
         outputs = model(image)
-        _, predicted = torch.max(outputs, 1)
-        return predicted.item()
+        probabilities = torch.nn.functional.softmax(outputs, dim=1)
+        confidence, predicted = torch.max(probabilities, 1)
+        return predicted.item(), confidence.item() * 100
 
 # Streamlit app
 
@@ -95,9 +96,15 @@ def main():
 
         # Predict and display result
         try:
-            predicted_idx = predict(model, image, device)
+            predicted_idx, confidence = predict(model, image, device)
             predicted_class = classes[predicted_idx]
-            st.write(f"**Prediction**: {predicted_class}")
+
+            # Display prediction in a table
+            results_data = {
+                "Flower Type": [predicted_class],
+                "Confidence": [f"{confidence:.2f}%"]
+            }
+            st.table(results_data)
         except Exception as e:
             st.error(f"Error during prediction: {str(e)}")
 
